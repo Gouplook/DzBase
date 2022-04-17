@@ -5,7 +5,10 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"github.com/Gouplook/dzgin"
 	"github.com/gin-gonic/gin"
+	"github.com/opentracing/opentracing-go"
+	"github.com/uber/jaeger-client-go"
 	"github.com/uber/jaeger-client-go/config"
 	"io"
 	"io/ioutil"
@@ -46,20 +49,20 @@ func NewJaeger(service string, Type string, Param float64, agentHost string) (op
 
 //开启链路追踪
 func OpenJaeger() (opentracing.Tracer, io.Closer, error) {
-	isopen, err := kcgin.AppConfig.Bool("jaeger.open")
+	isopen, err := dzgin.AppConfig.Bool("jaeger.open")
 	if isopen == false {
 		return nil, nil, err
 	}
-	serviceName := kcgin.AppConfig.String("jaeger.serviceName")
+	serviceName := dzgin.AppConfig.String("jaeger.serviceName")
 	if len(serviceName) == 0 {
 		return nil, nil, errors.New("jaeger.serviceName is null")
 	}
-	jtype := kcgin.AppConfig.String("jaeger.jtype")
-	param, err := kcgin.AppConfig.Float("jaeger.param")
+	jtype := dzgin.AppConfig.String("jaeger.jtype")
+	param, err := dzgin.AppConfig.Float("jaeger.param")
 	if err != nil {
 		return nil, nil, err
 	}
-	agentHost := kcgin.AppConfig.String("jaeger.agentHost")
+	agentHost := dzgin.AppConfig.String("jaeger.agentHost")
 	if len(agentHost) == 0 {
 		return nil, nil, errors.New("jaeger.agentHost is empty")
 	}
